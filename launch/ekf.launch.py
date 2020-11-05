@@ -32,7 +32,7 @@ def generate_launch_description():
             name='ekf_filter_node',
             output='screen',
             remappings=[
-                ('/odometry/filtered', ('/agv66908/odom')),
+                ('/odometry/filtered', ('/agv1/odom')),
                 ('/accel/filtered', 'acceleration/filtered'),
             ],
             parameters=["/code/ros2_ws/src/robot_localization/params/ekf.yaml"],
