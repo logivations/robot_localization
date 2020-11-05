@@ -22,10 +22,23 @@ from launch.substitutions import EnvironmentVariable
 import pathlib
 import launch.actions
 from launch.actions import DeclareLaunchArgument
-from nav2_common.launch import RewrittenYaml
+from launch.substitutions import LaunchConfiguration
+from launch_ros.actions import PushRosNamespace
+
 
 def generate_launch_description():
+    
+    namespace = LaunchConfiguration('namespace')
+
     return LaunchDescription([
+        
+        DeclareLaunchArgument(
+            'namespace', default_value='',
+            description='Top-level namespace'
+        ),
+        
+        #PushRosNamespace(namespace=namespace),
+
         launch_ros.actions.Node(
             package='robot_localization',
             executable='ekf_node',
