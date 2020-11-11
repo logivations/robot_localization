@@ -37,8 +37,8 @@ AGV_ID = config.getint("conf", "agv_id")
 PARAMETER_FILE_PATH = "/code/ros2_ws/src/robot_localization/params/ekf.yaml"
 
 def generate_launch_description():
-    odom0 = "odom0: /agv" + str(AGV_ID) +  "/wheel_odom_node/odom"
-    odom1 =  "odom1: /agv"+ str(AGV_ID) + "/camera_odom_node/odom"
+    odom0 = "odom0: /agv" + str(AGV_ID) +  "/wheel_odom_node/odom_wheel"
+    odom1 =  "odom1: /agv"+ str(AGV_ID) + "/camera_odom_node/odom_camera"
     cmd_start = (
             "sed -i -E 's;odom0:.+;"
             + odom0
