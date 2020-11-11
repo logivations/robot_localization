@@ -24,9 +24,39 @@ import launch.actions
 from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import PushRosNamespace
+import subprocess
+from logging import getLogger
+logger = getLogger(__name__)
 
+from configparser import ConfigParser
+
+config = ConfigParser()
+config.read("/data/workspace/deep_cv/appconfig/tracking/agv_id.ini")
+AGV_ID = config.getint("conf", "agv_id")
+
+PARAMETER_FILE_PATH = "/code/ros2_ws/src/robot_localization/params/ekf.yaml"
 
 def generate_launch_description():
+    odom0 = "odom0: /agv" + str(AGV_ID) +  "/wheel_odom_node/odom"
+    odom1 =  "odom1: /agv"+ str(AGV_ID) + "/camera_odom_node/odom"
+    cmd_start = (
+            "sed -i -E 's;odom0:.+;"
+            + odom0
+            + ";g' "
+            + PARAMETER_FILE_PATH
+    )
+    cmd_end = (
+            "sed -i -E 's;odom1:.+;" + odom1 + ";g' " + PARAMETER_FILE_PATH
+    )
+    try:
+        subprocess.check_output(
+            cmd_start, timeout=2, shell=True,
+        )
+        subprocess.check_output(
+            cmd_end, timeout=2, shell=True,
+        )
+    except:
+        logger.error(f"could not modify ekf params file. ")
     
     namespace = LaunchConfiguration('namespace')
 
@@ -45,7 +75,7 @@ def generate_launch_description():
             name='ekf_filter_node',
             output='screen',
             remappings=[
-                ('/odometry/filtered', ('/agv1/odom')),
+                ('/odometry/filtered', ('/agv' + str(AGV_ID) + '/odom')),
                 ('/accel/filtered', 'acceleration/filtered'),
             ],
             parameters=["/code/ros2_ws/src/robot_localization/params/ekf.yaml"],
