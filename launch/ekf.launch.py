@@ -22,14 +22,32 @@ from launch.substitutions import EnvironmentVariable
 import pathlib
 import launch.actions
 from launch.actions import DeclareLaunchArgument
+from launch.substitutions import LaunchConfiguration
+from launch_ros.actions import PushRosNamespace
+
 
 def generate_launch_description():
+    
+    namespace = LaunchConfiguration('namespace')
+
     return LaunchDescription([
+        
+        DeclareLaunchArgument(
+            'namespace', default_value='',
+            description='Top-level namespace'
+        ),
+        
+        #PushRosNamespace(namespace=namespace),
+
         launch_ros.actions.Node(
             package='robot_localization',
             executable='ekf_node',
             name='ekf_filter_node',
             output='screen',
-            parameters=[os.path.join(get_package_share_directory("robot_localization"), 'params', 'ekf.yaml')],
-           ),
-])
+            remappings=[
+                ('/odometry/filtered', ('/agv1/odom')),
+                ('/accel/filtered', 'acceleration/filtered'),
+            ],
+            parameters=["/code/ros2_ws/src/robot_localization/params/ekf.yaml"],
+        ),
+    ])
