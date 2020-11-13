@@ -37,46 +37,21 @@ AGV_ID = config.getint("conf", "agv_id")
 PARAMETER_FILE_PATH = "/code/ros2_ws/src/robot_localization/params/ekf.yaml"
 
 def generate_launch_description():
-    odom0 = "odom0: /agv" + str(AGV_ID) +  "/wheel_odom_node/odom_wheel"
-    odom1 =  "odom1: /agv"+ str(AGV_ID) + "/camera_odom_node/odom_camera"
-    cmd_start = (
-            "sed -i -E 's;odom0:.+;"
-            + odom0
-            + ";g' "
-            + PARAMETER_FILE_PATH
-    )
-    cmd_end = (
-            "sed -i -E 's;odom1:.+;" + odom1 + ";g' " + PARAMETER_FILE_PATH
-    )
-    try:
-        subprocess.check_output(
-            cmd_start, timeout=2, shell=True,
-        )
-        subprocess.check_output(
-            cmd_end, timeout=2, shell=True,
-        )
-    except:
-        logger.error(f"could not modify ekf params file. ")
-    
-    namespace = LaunchConfiguration('namespace')
 
     return LaunchDescription([
-        
         DeclareLaunchArgument(
             'namespace', default_value='',
             description='Top-level namespace'
         ),
-        
-        #PushRosNamespace(namespace=namespace),
-
         launch_ros.actions.Node(
             package='robot_localization',
             executable='ekf_node',
             name='ekf_filter_node',
             output='screen',
             remappings=[
-                ('/odometry/filtered', ('/agv' + str(AGV_ID) + '/odom')),
-                ('/accel/filtered', 'acceleration/filtered'),
+                ('/odometry/filtered', (LaunchConfiguration("namespace") , '/odom')),
+                ('odom0', (LaunchConfiguration("namespace") ,  '/wheel_odom_node/odom_wheel')),
+                ('odom1',  (LaunchConfiguration("namespace") , '/camera_odom_node/odom_camera')),
             ],
             parameters=["/code/ros2_ws/src/robot_localization/params/ekf.yaml"],
         ),
