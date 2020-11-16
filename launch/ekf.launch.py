@@ -50,8 +50,8 @@ def generate_launch_description():
             output='screen',
             remappings=[
                 ('/odometry/filtered', (LaunchConfiguration("namespace") , '/odom')),
-                ('odom0', (LaunchConfiguration("namespace") ,  '/wheel_odom_node/odom_wheel')),
-                ('odom1',  (LaunchConfiguration("namespace") , '/camera_odom_node/odom_camera')),
+                ('odom0', (LaunchConfiguration("namespace") ,  '/wheel_odom_node/odom')),
+                ('odom1',  (LaunchConfiguration("namespace") , '/camera_odom_node/odom')),
             ],
             parameters=["/code/ros2_ws/src/robot_localization/params/ekf.yaml"],
         ),
