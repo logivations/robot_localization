@@ -24,29 +24,34 @@ import launch.actions
 from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import PushRosNamespace
+import subprocess
+from logging import getLogger
+logger = getLogger(__name__)
 
+from configparser import ConfigParser
+
+config = ConfigParser()
+config.read("/data/workspace/deep_cv/appconfig/tracking/agv_id.ini")
+AGV_ID = config.getint("conf", "agv_id")
+
+PARAMETER_FILE_PATH = "/code/ros2_ws/src/robot_localization/params/ekf.yaml"
 
 def generate_launch_description():
-    
-    namespace = LaunchConfiguration('namespace')
 
     return LaunchDescription([
-        
         DeclareLaunchArgument(
             'namespace', default_value='',
             description='Top-level namespace'
         ),
-        
-        #PushRosNamespace(namespace=namespace),
-
         launch_ros.actions.Node(
             package='robot_localization',
             executable='ekf_node',
             name='ekf_filter_node',
             output='screen',
             remappings=[
-                ('/odometry/filtered', ('/agv1/odom')),
-                ('/accel/filtered', 'acceleration/filtered'),
+                ('/odometry/filtered', (LaunchConfiguration("namespace") , '/odom')),
+                ('odom0', (LaunchConfiguration("namespace") ,  '/wheel_odom_node/odom')),
+                ('odom1',  (LaunchConfiguration("namespace") , '/camera_odom_node/odom')),
             ],
             parameters=["/code/ros2_ws/src/robot_localization/params/ekf.yaml"],
         ),
