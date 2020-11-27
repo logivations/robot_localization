@@ -43,6 +43,10 @@ def generate_launch_description():
             'namespace', default_value='',
             description='Top-level namespace'
         ),
+        DeclareLaunchArgument(
+            'rviz_prefix', default_value='',
+            description='Rviz prefix'
+        ),
         launch_ros.actions.Node(
             package='robot_localization',
             executable='ekf_node',
@@ -50,8 +54,9 @@ def generate_launch_description():
             output='screen',
             remappings=[
                 ('/odometry/filtered', (LaunchConfiguration("namespace") , '/odom')),
-                ('odom0', (LaunchConfiguration("namespace") ,  '/wheel_odom_node/odom')),
-                ('odom1',  (LaunchConfiguration("namespace") , '/camera_odom_node/odom')),
+                ('odom0', (LaunchConfiguration("namespace") ,  '/', LaunchConfiguration("rviz_prefix"),'wheel_odom_node/odom')),
+                ('odom1',  (LaunchConfiguration("namespace") ,'/', LaunchConfiguration("rviz_prefix"), '/camera_odom_node/odom')),
+                ('map_frame',  ("/", LaunchConfiguration("rviz_prefix") , 'costmap_node/map')),
             ],
             parameters=["/code/ros2_ws/src/robot_localization/params/ekf.yaml"],
         ),
