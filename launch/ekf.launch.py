@@ -54,9 +54,9 @@ def generate_launch_description():
             output='screen',
             remappings=[
                 ('/odometry/filtered', (LaunchConfiguration("namespace") , '/odom')),
-                ('odom0', (LaunchConfiguration("namespace") ,  '/', LaunchConfiguration("rviz_prefix"),'wheel_odom_node/odom')),
-                ('odom1',  (LaunchConfiguration("namespace") ,'/', LaunchConfiguration("rviz_prefix"), 'camera_odom_node/odom')),
-                ('map_frame',  ("/", LaunchConfiguration("rviz_prefix") , 'costmap_node/map')),
+                ('/odom0', (LaunchConfiguration("namespace") ,  '/', LaunchConfiguration("rviz_prefix"),'wheel_odom_node/odom')),
+                ('/odom1',  (LaunchConfiguration("namespace") ,'/', LaunchConfiguration("rviz_prefix"), 'camera_odom_node/odom')),
+                ('/costmap_node/map',  ("/", LaunchConfiguration("rviz_prefix") , 'costmap_node/map')),
             ],
             parameters=["/code/ros2_ws/src/robot_localization/params/ekf.yaml"],
         ),
