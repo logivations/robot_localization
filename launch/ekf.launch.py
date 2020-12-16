@@ -57,6 +57,9 @@ def generate_launch_description():
                 ('/odom0', (LaunchConfiguration("namespace") ,  '/', LaunchConfiguration("rviz_prefix"),'wheel_odom_node/odom')),
                 ('/odom1',  (LaunchConfiguration("namespace") ,'/', LaunchConfiguration("rviz_prefix"), 'camera_odom_node/odom')),
                 ('/costmap_node/map',  ("/", LaunchConfiguration("rviz_prefix") , 'costmap_node/map')),
+                ('/tf',  (LaunchConfiguration("namespace") , '/tf')),
+                ('/tf_static',  (LaunchConfiguration("namespace") , '/tf_static')),
+
             ],
             parameters=["/code/ros2_ws/src/robot_localization/params/ekf.yaml"],
         ),
