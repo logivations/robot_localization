@@ -76,8 +76,8 @@ ekf_filter_node:
 # default values, and must be specified.
         odom0: /odom0       # TODO: Select topic with namespace. Also we can add twist0
         odom1: /odom1
-        imu0: /realsense_imu/gyro/sample       # TODO: Select top ic with namespace. Also we can add twist0
-        imu1: /realsense_imu/accel/sample
+        imu0: /realsense_front_2/gyro/sample      # TODO: Select top ic with namespace. Also we can add twist0
+        imu1: /realsense_front_2/accel/sample
 
 # Each sensor reading updates some or all of the filter's state. These options give you greater control over which
 # values from each measurement are fed to the filter. For example, if you have an odometry message as input, but only
