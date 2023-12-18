@@ -46,11 +46,11 @@
 namespace robot_localization
 {
 Ekf::Ekf()
-: FilterBase(), Node("Ekf", rclcpp::NodeOptions())
+: FilterBase(), Node("ekf", rclcpp::NodeOptions())
 {}
 
 Ekf::Ekf(const rclcpp::NodeOptions & options)
-  : FilterBase(), Node("Ekf", options) {}
+  : FilterBase(), Node("ekf", options) {}
 
 Ekf::~Ekf() {}
 
