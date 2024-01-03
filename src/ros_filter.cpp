@@ -130,6 +130,8 @@ RosFilter<T>::RosFilter(const rclcpp::NodeOptions & options)
   state_variable_names_.push_back("X_ACCELERATION");
   state_variable_names_.push_back("Y_ACCELERATION");
   state_variable_names_.push_back("Z_ACCELERATION");
+
+  initialize();
 }
 
 template<typename T>
