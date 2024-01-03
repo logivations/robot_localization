@@ -83,7 +83,7 @@ using namespace std::chrono_literals;
 
 template<typename T>
 RosFilter<T>::RosFilter(const rclcpp::NodeOptions & options)
-: Node(options.arguments()[0], options),
+: Node("ekf_filter", options),
   print_diagnostics_(true),
   publish_acceleration_(false),
   publish_transform_(true),
@@ -131,7 +131,13 @@ RosFilter<T>::RosFilter(const rclcpp::NodeOptions & options)
   state_variable_names_.push_back("Y_ACCELERATION");
   state_variable_names_.push_back("Z_ACCELERATION");
 
-  initialize();
+  init_timer_ = this->create_wall_timer(
+      0s,
+      [this]() -> void {
+        init_timer_->cancel();
+        this->initialize();
+      });
+  
 }
 
 template<typename T>

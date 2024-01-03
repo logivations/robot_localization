@@ -846,6 +846,8 @@ protected:
   //! Must be on heap since pointer is passed to diagnostic_updater::FrequencyStatusParam
   //!
   double max_frequency_;
+
+  rclcpp::TimerBase::SharedPtr init_timer_;
 };
 
 }  // namespace robot_localization
