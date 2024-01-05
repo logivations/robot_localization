@@ -14,6 +14,7 @@ if(NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE RelWithDebInfo)
 endif()
 
+find_package(backward_ros REQUIRED)
 find_package(ament_cmake REQUIRED)
 find_package(angles REQUIRED)
 find_package(rclcpp REQUIRED)
@@ -67,6 +68,7 @@ add_library(
   ${library_name} SHARED
   src/ekf.cpp
   src/ukf.cpp
+  src/ekf_ros_filter.cpp
   src/filter_base.cpp
   src/filter_utilities.cpp
   src/navsat_transform.cpp
@@ -163,11 +165,10 @@ target_link_libraries(
 ament_target_dependencies(
   robot_localization_listener_node
   rclcpp
-  rclcpp_components
 )
 
 
-rclcpp_components_register_nodes(${library_name} "robot_localization::Ekf")
+rclcpp_components_register_nodes(${library_name} "robot_localization::RosEkf")
 
 if(BUILD_TESTING)
   find_package(ament_cmake_gtest REQUIRED)
