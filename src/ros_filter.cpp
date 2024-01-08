@@ -132,9 +132,12 @@ RosFilter<T>::RosFilter(const rclcpp::NodeOptions & options)
   state_variable_names_.push_back("Z_ACCELERATION");
 
   init_timer_ = this->create_wall_timer(
-      0s,
+      0.2s,
       [this]() -> void {
         init_timer_->cancel();
+        RCLCPP_INFO(
+    get_logger(),
+    "Received a request to initialize filter.");
         this->initialize();
       });
   
