@@ -981,6 +981,8 @@ void RosFilter<T>::loadParams()
   std::vector<double> deceleration_limits;
   std::vector<double> deceleration_gains;
 
+  use_realtime_priority_ = this->declare_parameter("use_realtime_priority", false);
+
   use_control_ = this->declare_parameter("use_control", false);
   control_timeout = this->declare_parameter("control_timeout", 0.0);
 
@@ -2100,6 +2102,21 @@ void RosFilter<T>::initialize()
     this->get_clock(), std::chrono::duration_cast<std::chrono::nanoseconds>(timespan),
     std::bind(&RosFilter<T>::periodicUpdate, this), this->get_node_base_interface()->get_context());
   this->get_node_timers_interface()->add_timer(timer_, nullptr);
+
+  if (use_realtime_priority_) {
+    sched_param sch;
+    sch.sched_priority = 49;
+    if (sched_setscheduler(0, SCHED_FIFO, &sch) == -1) {
+      std::string errmsg(
+          "Cannot set as real-time thread. Users must set: <username> hard rtprio 99 and "
+          "<username> soft rtprio 99 in /etc/security/limits.conf to enable "
+          "realtime prioritization! Error: ");
+      throw std::runtime_error(errmsg + std::strerror(errno));
+    }
+      else {
+        RCLCPP_INFO(get_logger(), "Soft realtime prioritization successfully set!");
+      }
+  }
 }
 
 template<typename T>
