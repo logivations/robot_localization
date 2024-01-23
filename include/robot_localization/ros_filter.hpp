@@ -518,6 +518,10 @@ protected:
   //!
   bool reset_on_time_jump_;
 
+  //! @brief Whether or not prioritize this process over others
+  //!
+  bool use_realtime_priority_;
+
   //! @brief Whether or not we use smoothing
   //!
   bool smooth_lagged_data_;
