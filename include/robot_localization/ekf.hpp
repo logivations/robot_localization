@@ -48,7 +48,7 @@ namespace robot_localization
  * FilterBase and overrides the predict() and correct() methods in keeping with
  * the discrete time EKF algorithm.
  */
-class Ekf : public FilterBase, public rclcpp::Node
+class Ekf : public FilterBase
 {
 public:
   /**
