@@ -35,6 +35,7 @@ find_package(tf2_ros REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(Boost REQUIRED)
 find_package(yaml_cpp_vendor REQUIRED)
+find_package(yaml-cpp REQUIRED)
 
 # Geographiclib installs FindGeographicLib.cmake to this non-standard location
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "/usr/share/cmake/geographiclib/")
@@ -44,9 +45,11 @@ set(library_name rl_lib)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "srv/FromLL.srv"
+  "srv/FromLLArray.srv"
   "srv/GetState.srv"
   "srv/SetDatum.srv"
   "srv/SetPose.srv"
+  "srv/SetUTMZone.srv"
   "srv/ToggleFilterProcessing.srv"
   "srv/ToLL.srv"
   DEPENDENCIES
@@ -104,6 +107,7 @@ target_link_libraries(
   ${library_name}
   ${GeographicLib_LIBRARIES}
   ${EIGEN3_LIBRARIES}
+  yaml-cpp::yaml-cpp
 )
 
 ament_target_dependencies(
