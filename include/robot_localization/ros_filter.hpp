@@ -645,6 +645,10 @@ protected:
   //!
   rclcpp::Time last_published_stamp_;
 
+  //! @brief The time the node was constructed, used for startup grace period
+  //!
+  rclcpp::Time startup_time_;
+
   //! @brief We process measurements by queueing them up in
   //! callbacks and processing them all at once within each
   //! iteration

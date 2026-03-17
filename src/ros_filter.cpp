@@ -107,6 +107,7 @@ RosFilter<T>::RosFilter(const rclcpp::NodeOptions & options)
   initial_estimate_error_covariance_(STATE_SIZE, STATE_SIZE),
   last_diag_time_(0, 0, RCL_ROS_TIME),
   last_published_stamp_(0, 0, RCL_ROS_TIME),
+  startup_time_(0, 0, RCL_ROS_TIME),
   predict_to_current_time_(false),
   last_set_pose_time_(0, 0, RCL_ROS_TIME),
   latest_control_time_(0, 0, RCL_ROS_TIME),
@@ -2070,6 +2071,8 @@ void RosFilter<T>::initialize()
 
   loadParams();
 
+  startup_time_ = this->now();
+
   if (print_diagnostics_) {
     diagnostic_updater_->add(
       "Filter diagnostic updater", this,
@@ -2313,11 +2316,13 @@ void RosFilter<T>::periodicUpdate()
   // Warn the user if the update took too long
   const double loop_elapsed = (this->now() - cur_time).seconds();
   if (loop_elapsed > 1. / frequency_) {
-    RCLCPP_ERROR_STREAM(
-      get_logger(),
-      "Failed to meet update rate! Took " << std::setprecision(20) << loop_elapsed << "seconds. "
-        "Try decreasing the rate, limiting sensor output frequency, or limiting the number of "
-        "sensors.");
+    if ((this->now() - startup_time_).seconds() >= 60.0) {
+      RCLCPP_ERROR_STREAM(
+        get_logger(),
+        "Failed to meet update rate! Took " << std::setprecision(20) << loop_elapsed << "seconds. "
+          "Try decreasing the rate, limiting sensor output frequency, or limiting the number of "
+          "sensors.");
+    }
   }
 }
 
